@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #0F172A;
+    --color-secondary: #1E293B;
+    --color-accent: #22C55E;
+    --color-background: #020617;
+    --color-foreground: #F8FAFC;
+    --color-card: #0E1223;
+    --color-muted: #1A1E2F;
+    --color-muted-foreground: #94A3B8;
+    --color-border: #334155;
+    --color-destructive: #EF4444;
+    --color-warning: #F59E0B;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: 'Fira Sans', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+  }
+}
+
+/* Custom sleek scrollbar for compact OLED interfaces */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #090D1A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Glassmorphism & Glow utility classes */
+.glass-panel {
+  background: rgba(14, 18, 35, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+}
+
+.glow-border-accent {
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.35);
+  border-color: rgba(34, 197, 94, 0.8);
+}
+
+.glow-border-destructive {
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
+  border-color: rgba(239, 68, 68, 0.8);
+}
+
+.glow-border-warning {
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.35);
+  border-color: rgba(245, 158, 11, 0.8);
+}
