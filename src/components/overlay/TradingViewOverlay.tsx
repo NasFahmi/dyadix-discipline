@@ -20,6 +20,7 @@ import { getMarketSessions } from '../../utils/session';
 import { fetchEconomicNews, getNewsAlerts } from '../../utils/news';
 import { NewsAlert, NewsEvent, StageType } from '../../types';
 import { ChecklistStage } from '../checklist/ChecklistStage';
+import { ActiveSessionBanner } from '../session/ActiveSessionBanner';
 import { MarketClockWidget } from '../session/MarketClockWidget';
 import { EconomicNewsWidget } from '../news/EconomicNewsWidget';
 import { StrategyEditorModal } from '../checklist/StrategyEditorModal';
@@ -336,6 +337,9 @@ export const TradingViewOverlay: React.FC = () => {
           <div className="p-3 max-h-[380px] overflow-y-auto space-y-3">
             {activeTab === 'checklist' && (
               <div className="space-y-2.5">
+                {/* Active Trading Session Banner */}
+                <ActiveSessionBanner compact />
+
                 <ChecklistStage
                   stage="preMarket"
                   title="Pre-Market Checklist"

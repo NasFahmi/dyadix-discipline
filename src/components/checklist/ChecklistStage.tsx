@@ -22,7 +22,7 @@ export const ChecklistStage: React.FC<ChecklistStageProps> = ({
   subtitle,
   compact = false,
 }) => {
-  const { strategy, addItem, isStageUnlocked, getStageProgress } = useDisciplineStore();
+  const { strategy, addItem, isStageUnlocked, getStageProgress, currentSession } = useDisciplineStore();
   const [newItemTitle, setNewItemTitle] = useState('');
   const [isAdding, setIsAdding] = useState(false);
 
@@ -86,6 +86,11 @@ export const ChecklistStage: React.FC<ChecklistStageProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5">
+            {stage === 'afterMarket' && isUnlocked && currentSession && (
+              <span className="text-[10px] font-mono text-slate-300 bg-slate-950 px-1.5 py-0.5 rounded border border-border/60 hidden sm:inline-block">
+                Session: {currentSession.split(' ')[0]}
+              </span>
+            )}
             <Badge variant={isUnlocked ? 'outline' : 'default'} size="xs">
               {stageBadgeLabel}
             </Badge>

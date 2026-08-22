@@ -139,3 +139,105 @@ export function getMarketSessions(now: Date = new Date()): {
     localTimeStr,
   };
 }
+
+export interface ActiveTradingSessionInfo {
+  id: string;
+  name: string;
+  shortName: string;
+  isActive: boolean;
+  isOverlap: boolean;
+  isCustomOverride: boolean;
+  statusLabel: string;
+  timeRemainingStr: string;
+  utcTimeStr: string;
+  localTimeStr: string;
+  badgeColor: 'accent' | 'warning' | 'default';
+  description: string;
+}
+
+/**
+ * Get active trading session info based on real-time clock or manual override
+ */
+export function getCurrentTradingSession(
+  overrideId?: string | null,
+  now: Date = new Date()
+): ActiveTradingSessionInfo {
+  const data = getMarketSessions(now);
+  const { sessions, activeSummary, isOverlap, utcTimeStr, localTimeStr } = data;
+
+  if (overrideId && overrideId !== 'auto') {
+    const matchedSession = sessions.find((s) => s.id === overrideId);
+    if (matchedSession) {
+      return {
+        id: matchedSession.id,
+        name: matchedSession.name,
+        shortName: matchedSession.name.replace(' (Asia)', '').replace(' Session', ''),
+        isActive: matchedSession.isActive,
+        isOverlap: false,
+        isCustomOverride: true,
+        statusLabel: matchedSession.isActive ? 'Active (Manual)' : 'Upcoming (Manual)',
+        timeRemainingStr: matchedSession.timeRemainingStr,
+        utcTimeStr,
+        localTimeStr,
+        badgeColor: matchedSession.isActive ? 'accent' : 'warning',
+        description: matchedSession.badgeText,
+      };
+    }
+  }
+
+  // Automatic detection
+  const activeSessions = sessions.filter((s) => s.isActive);
+
+  if (isOverlap) {
+    const london = sessions.find((s) => s.id === 'london');
+    return {
+      id: 'overlap',
+      name: 'London + New York Overlap',
+      shortName: 'London + NY Overlap',
+      isActive: true,
+      isOverlap: true,
+      isCustomOverride: false,
+      statusLabel: 'High Volume Overlap',
+      timeRemainingStr: london ? london.timeRemainingStr : 'Peak Liquidity',
+      utcTimeStr,
+      localTimeStr,
+      badgeColor: 'accent',
+      description: '13:00 - 17:00 UTC (Peak volatility & liquidity)',
+    };
+  }
+
+  if (activeSessions.length > 0) {
+    const mainActive = activeSessions[0];
+    return {
+      id: mainActive.id,
+      name: mainActive.name,
+      shortName: mainActive.name.replace(' (Asia)', '').replace(' Session', ''),
+      isActive: true,
+      isOverlap: false,
+      isCustomOverride: false,
+      statusLabel: 'Active Session',
+      timeRemainingStr: mainActive.timeRemainingStr,
+      utcTimeStr,
+      localTimeStr,
+      badgeColor: 'accent',
+      description: mainActive.badgeText,
+    };
+  }
+
+  // Off hours
+  const tokyo = sessions.find((s) => s.id === 'tokyo');
+  return {
+    id: 'off-hours',
+    name: 'Off Hours / Asian Pre-Market',
+    shortName: 'Off Hours',
+    isActive: false,
+    isOverlap: false,
+    isCustomOverride: false,
+    statusLabel: 'Low Liquidity',
+    timeRemainingStr: tokyo ? tokyo.timeRemainingStr : 'Market Closed',
+    utcTimeStr,
+    localTimeStr,
+    badgeColor: 'default',
+    description: 'Outside primary liquid sessions. Exercise high discipline.',
+  };
+}

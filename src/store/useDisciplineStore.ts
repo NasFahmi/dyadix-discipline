@@ -22,7 +22,7 @@ const DEFAULT_STRATEGY: Strategy = {
   ],
   afterMarket: [
     { id: 'am-1', title: 'Simpan Screenshot (H4, H1, M15, Entry, Exit)', completed: false, createdAt: Date.now() },
-    { id: 'am-2', title: 'Catat Jurnal (Pair, Bias, Rationale 1-2 kalimat, Risk, RR, Result)', completed: false, createdAt: Date.now() },
+    { id: 'am-2', title: 'Catat Jurnal (Pair, Bias, Session, Rationale 1-2 kalimat, Risk, RR, Result)', completed: false, createdAt: Date.now() },
     { id: 'am-3', title: 'Refleksi Kepatuhan: "Apakah saya mengikuti sistem 100%?"', completed: false, createdAt: Date.now() },
   ],
   updatedAt: Date.now(),
@@ -41,6 +41,8 @@ const INITIAL_STATE: DisciplineState = {
   overlayLocked: false,
   newsFilter: 'high',
   activeTab: 'checklist',
+  currentSession: 'London Session',
+  selectedSessionOverride: null, // null means auto-detect from clock
 };
 
 interface DisciplineStore extends DisciplineState {
@@ -55,6 +57,10 @@ interface DisciplineStore extends DisciplineState {
   moveItem: (stage: StageType, itemId: string, direction: 'up' | 'down') => void;
   resetChecklist: () => void;
   
+  // Session Actions
+  setCurrentSession: (session: string) => void;
+  setSessionOverride: (sessionId: string | null) => void;
+
   // Overlay Actions
   setOverlayPosition: (pos: { x: number; y: number }) => void;
   toggleOverlayMinimize: () => void;
@@ -344,6 +350,23 @@ export const useDisciplineStore = create<DisciplineStore>((set, get) => ({
       };
 
       const updatedState = { ...state, strategy: newStrategy, lastResetDate: getTodayString() };
+      saveToStorage(updatedState);
+      return updatedState;
+    });
+  },
+
+  setCurrentSession: (session: string) => {
+    set((state) => {
+      if (state.currentSession === session) return state;
+      const updatedState = { ...state, currentSession: session };
+      saveToStorage(updatedState);
+      return updatedState;
+    });
+  },
+
+  setSessionOverride: (sessionId: string | null) => {
+    set((state) => {
+      const updatedState = { ...state, selectedSessionOverride: sessionId };
       saveToStorage(updatedState);
       return updatedState;
     });

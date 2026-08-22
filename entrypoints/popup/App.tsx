@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useDisciplineStore } from '../../src/store/useDisciplineStore';
 import { ChecklistStage } from '../../src/components/checklist/ChecklistStage';
+import { ActiveSessionBanner } from '../../src/components/session/ActiveSessionBanner';
 import { MarketClockWidget } from '../../src/components/session/MarketClockWidget';
 import { EconomicNewsWidget } from '../../src/components/news/EconomicNewsWidget';
 import { StrategyEditorModal } from '../../src/components/checklist/StrategyEditorModal';
@@ -169,6 +170,9 @@ export default function App({ isSidePanel = false }: AppProps) {
       <main className={clsx('flex-1 p-3.5 space-y-3 overflow-y-auto', !isSidePanel && 'max-h-[420px]')}>
         {activeTab === 'checklist' && (
           <div className="space-y-3">
+            {/* Real-time Active Trading Session Banner */}
+            <ActiveSessionBanner />
+
             <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
               <span className="font-semibold text-slate-300">Sequential Process Stages</span>
               <span className="text-[10px] font-mono">1 Global Strategy</span>

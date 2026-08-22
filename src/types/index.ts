@@ -62,4 +62,6 @@ export interface DisciplineState {
   overlayLocked: boolean;
   newsFilter: 'high' | 'all';
   activeTab: 'checklist' | 'session' | 'news' | 'settings';
+  currentSession: string;
+  selectedSessionOverride: string | null;
 }
